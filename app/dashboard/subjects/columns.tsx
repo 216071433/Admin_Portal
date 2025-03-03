@@ -1,6 +1,5 @@
 "use client"
 
-import { Badge } from "@/components/ui/badge"
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import {
@@ -15,64 +14,80 @@ import { Button } from "@/components/ui/button"
 import DeleteDialog from "@/components/DeleteDialog"
 
 // This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Subject = {
-  id: string
-  subjectName: number
-  gradeRange: string
-  schoolLevel: string
-}
+export type Story = {
+  id: string;
+  heading: string;
+  story: string;
+  date: string;
+  action: string;
+};
 
-export const columns: ColumnDef<Subject>[] = [
+
+export const columns: ColumnDef<Story>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ row }) => <span>{row.original.id}</span>, // Ensuring TypeScript knows `row.original` is a `Story`
   },
   {
-    accessorKey: "subjectName",
+    accessorKey: "heading",
     header: "Heading",
+    cell: ({ row }) => <span>{row.original.heading}</span>,
   },
   {
-    accessorKey: "gradeRange",
+    accessorKey: "story",
     header: "Story",
+    cell: ({ row }) => <span>{row.original.story}</span>,
   },
   {
-    accessorKey: "schoolLevel",
+    accessorKey: "date",
     header: "Date",
-    cell: ({row}) => {
-      return <Badge variant="outline" className='rounded-full bg-primary p-2 text-white font-light'>{row.getValue('schoolLevel')}</Badge>
-    }
+    cell: ({ row }) => <span>{row.original.date}</span>,
   },
   {
-      accessorKey: "actions",
-      header: "Actions",
-      id: "actions",
-      cell: ({ row }) => {
-        const payment = row.original
-   
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => {}}
-              >
-                Edit Subject
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <DeleteDialog title="Delete Subject" />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )
-      },
-    
-  }
-]
+    accessorKey: "actions",
+    header: "Actions",
+    id: "actions",
+    cell: ({ row }) => {
+      const story = row.original; // Now `row.original` is correctly typed as `Story`
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                console.log("Editing story:", story);
+              }}
+            >
+              Edit Story
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                deleteStory(story.id)
+                  .then(() => {
+                    alert("Story deleted successfully");
+                  })
+                  .catch((error) => {
+                    alert(`Error deleting story: ${error.message}`);
+                  });
+              }}
+            >
+              <DeleteDialog title="Delete a Story" />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+
+
+

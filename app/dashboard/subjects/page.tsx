@@ -7,18 +7,25 @@ import { columns } from './columns'
 
 import Link from 'next/link'
 
-type Subject = {
+type Story = {
   id: string
-  subjectName: number
-  gradeRange: string
-  schoolLevel: string
+  heading: string
+  story: string
+  date: string
+  actions: string
 }
 
-const SubjectsPage = async () => {
+const StoryPage = async () => {
   
-  const subjects: Subject[] = []
+  const storys: Story[] = []
 
- 
+  const response = await fetch("http://localhost:5000/api/news")
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch stories")
+  }
+
+  const data = await response.json()
 
  
 
@@ -30,7 +37,7 @@ const SubjectsPage = async () => {
         <CardDescription className='flex flex-row items-center justify-between'>
           <div>
             <h2 className='text-2xl font-semibold'>
-              Subjects Table
+              List of All Stories
             </h2>
             <p className='text-[12px] font-thin'>
               List of all subjects offered on the app
@@ -42,13 +49,13 @@ const SubjectsPage = async () => {
             className={buttonVariants()}
           >
             <CirclePlus className='size-4'/>
-            Add Subject
+            Add Story
           </Link>
         </CardDescription>
       </Card>
 
       <Card className='w-full p-5'>
-        {subjects ? <DataTable columns={columns} data={subjects} /> : <p>No subjects available</p>}
+        {storys ? <DataTable columns={columns} data={data} /> : <p>No stories available</p>}
       </Card>
 
       
@@ -57,4 +64,4 @@ const SubjectsPage = async () => {
   )
 }
 
-export default SubjectsPage
+export default StoryPage
