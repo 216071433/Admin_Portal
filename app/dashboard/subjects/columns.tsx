@@ -11,45 +11,59 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import DeleteDialog from "@/components/DeleteDialog"
+import { redirect } from "next/navigation"
+import DeleteNewsFeed from "@/components/DeleteNewsFeed"
 
 // This type is used to define the shape of our data.
 export type Story = {
-  id: string;
+  _id: string;
   heading: string;
   story: string;
   date: string;
-  action: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 };
-
 
 export const columns: ColumnDef<Story>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "_id",
     header: "ID",
-    cell: ({ row }) => <span>{row.original.id}</span>, // Ensuring TypeScript knows `row.original` is a `Story`
+    cell: ({ row }) => <span className="font-medium">{row.original._id}</span>,
   },
   {
     accessorKey: "heading",
     header: "Heading",
-    cell: ({ row }) => <span>{row.original.heading}</span>,
+    cell: ({ row }) => <span className="font-medium">{row.original.heading}</span>,
   },
   {
     accessorKey: "story",
     header: "Story",
-    cell: ({ row }) => <span>{row.original.story}</span>,
+    cell: ({ row }) => (
+      <span className="max-w-[300px] truncate block">
+        {row.original.story}
+      </span>
+    ),
   },
   {
     accessorKey: "date",
     header: "Date",
-    cell: ({ row }) => <span>{row.original.date}</span>,
+    cell: ({ row }) => {
+      const date = new Date(row.original.date);
+      return (
+        <span className="font-medium">
+          {date.toLocaleDateString()}
+        </span>
+      );
+    },
   },
   {
-    accessorKey: "actions",
-    header: "Actions",
     id: "actions",
+    header: "Actions",
     cell: ({ row }) => {
-      const story = row.original; // Now `row.original` is correctly typed as `Story`
+      const story = row.original;
+      const id = story._id;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -62,24 +76,14 @@ export const columns: ColumnDef<Story>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                console.log("Editing story:", story);
+                redirect(`/dashboard/subjects/${id}`);
               }}
             >
               Edit Story
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                deleteStory(story.id)
-                  .then(() => {
-                    alert("Story deleted successfully");
-                  })
-                  .catch((error) => {
-                    alert(`Error deleting story: ${error.message}`);
-                  });
-              }}
-            >
-              <DeleteDialog title="Delete a Story" />
+            <DropdownMenuItem asChild>
+              <DeleteNewsFeed id={id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,10 +1,59 @@
-import React from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import {   Bot,   User } from 'lucide-react'
+'use client';
 
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Bot, User, Loader2 } from 'lucide-react';
 
-const DashboardBlocks = async () => {
-    
+const DashboardBlocks = () => {
+    const [newsFeedCount, setNewsFeedCount] = useState(0);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const getNewsFeedCount = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                
+                console.log('Fetching news count...');
+                const response = await fetch('http://localhost:5000/api/news/count', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                });
+
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Error response:', errorData);
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Received data:', data);
+                
+                if (!data.success) {
+                    throw new Error(data.message || 'Failed to fetch news count');
+                }
+
+                if (typeof data.count !== 'number') {
+                    throw new Error('Invalid response format');
+                }
+
+                setNewsFeedCount(data.count);
+            } catch (err) {
+                console.error('Detailed error:', err);
+                setError('Failed to fetch news feed count. Please try again later.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        getNewsFeedCount();
+    }, []);
 
     return (
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4 md:gap-8'>
@@ -14,9 +63,20 @@ const DashboardBlocks = async () => {
                     <User className='size-4 text-muted-foreground'/>
                 </CardHeader>
                 <CardContent>
-                    <h2 className='text-2xl font-bold'>
-                        
-                    </h2>
+                    {isLoading ? (
+                        <div className="flex items-center gap-2">
+                            <Loader2 className="h-6 w-6 animate-spin" />
+                            <span>Loading...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="text-red-500">
+                            {error}
+                        </div>
+                    ) : (
+                        <h2 className='text-2xl font-bold'>
+                            {newsFeedCount}
+                        </h2>
+                    )}
                     <p className='text-xs text-muted-foreground'>
                         Added by admin
                     </p>
@@ -37,9 +97,8 @@ const DashboardBlocks = async () => {
                     </p>
                 </CardContent>
             </Card>
-         
         </div>
-    )
-}
+    );
+};
 
-export default DashboardBlocks
+export default DashboardBlocks;

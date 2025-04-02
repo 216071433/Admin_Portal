@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Logo from '@/public/logo.png'
+import Logo from '@/public/logo.jpg'
 import React, { ReactNode } from 'react'
 import DashboardLinks from '@/components/DashboardLinks'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -14,14 +14,20 @@ const DashboardLayout = ({children}: {children: ReactNode}) => {
         <div className='grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]'>
             <div className='hidden border-r bg-muted/40 md:block bg-gray-300'>
                 <div className='flex flex-col max-h-screen h-full gap-2 bg-gray-300'>
-                    <div className='h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6'>
-                        <Link href={'/'} className='flex items-center gap-2'>
-                            <Image 
-                                src={Logo} 
-                                alt='logo'
-                                className='size-7' 
-                            />
-                            <p className='text-xl font-thin'>News<span className='text-blue-600 font-thin'>Feed</span></p>
+                    <div className='h-16 flex items-center justify-center border-b px-4 lg:h-[70px] lg:px-6 bg-white'>
+                        <Link href={'/'} className='flex items-center gap-3'>
+                            <div className='relative w-12 h-12 rounded-full overflow-hidden'>
+                                <Image 
+                                    src={Logo} 
+                                    alt='logo'
+                                    fill
+                                    className='object-cover' 
+                                    priority
+                                />
+                            </div>
+                            <div className='flex flex-col'>
+                                <p className='text-xl font-semibold'>News<span className='text-blue-600'>Feed</span></p>
+                            </div>
                         </Link>
                     </div>
                     <div className='flex-1'>

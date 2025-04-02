@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
@@ -21,18 +21,19 @@ import { CalendarIcon, Loader2 } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
+import { StoryType } from '@/app/dashboard/subjects/[storyId]/page'
 
 const formSchema = z.object({
     heading: z.string().min(2, {
-      message: "Subject must be at least 2 characters.",
+      message: "Heading must be at least 2 characters.",
     }),
     story: z.string().min(1, {
-        message: "Please select a grade range.",
+        message: "Story is required.",
     }),
     date: z.date(),
 })
 
-const EventPost = () => {
+const EditStory = ({_id, date, heading, story}: StoryType) => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -40,9 +41,9 @@ const EventPost = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            heading: "",
-            story: "",
-            date: new Date(),
+            heading: heading,
+            story: story,
+            date: new Date(date),
         },
     })
 
@@ -52,8 +53,9 @@ const EventPost = () => {
         setError(null)
 
         try {
-            const response = await fetch("http://localhost:5000/api/news", {
-                method: "POST",
+            // PUT request to update the story using its _id
+            const response = await fetch(`http://localhost:5000/api/news/${_id}`, {
+                method: "PUT", // Change from POST to PUT
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -61,12 +63,12 @@ const EventPost = () => {
             })
 
             if (!response.ok) {
-                throw new Error("Failed to submit the story.")
+                throw new Error("Failed to update the story.")
             }
 
-            // If successful, you can redirect or reset the form
+            // If successful, you can reset the form and show a success message
             form.reset()
-            alert("Story added successfully!")
+            alert("Story updated successfully!")
 
         } catch (err) {
             setError("Something went wrong. Please try again later.")
@@ -79,7 +81,7 @@ const EventPost = () => {
     return (
         <Card className='w-full max-w-4xl mx-auto'>
             <CardHeader>
-                <CardTitle>Add News Feed</CardTitle>
+                <CardTitle>Edit News Feed</CardTitle>
             </CardHeader>
             <CardContent className='p-6'>
                 {error && (
@@ -156,7 +158,7 @@ const EventPost = () => {
                                         </PopoverContent>
                                     </Popover>
                                     <FormDescription>
-                                        select the date.
+                                        Select the date.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
@@ -164,7 +166,7 @@ const EventPost = () => {
                         />
 
                         <Button type="submit" className='w-full'>
-                            {isLoading ? <Loader2 className='size-4 animate-spin' /> : 'Add Story'}
+                            {isLoading ? <Loader2 className='size-4 animate-spin' /> : 'Update Story'}
                         </Button>
                     </form>
                 </Form>
@@ -173,5 +175,4 @@ const EventPost = () => {
     )
 }
 
-export default EventPost
-
+export default EditStory

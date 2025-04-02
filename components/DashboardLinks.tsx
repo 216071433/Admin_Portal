@@ -1,6 +1,6 @@
 'use client'
 import { cn } from '@/lib/utils'
-import { Book, File, HomeIcon, Play, User2 } from 'lucide-react'
+import { Book, HomeIcon} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -15,7 +15,7 @@ export const dashboardLinks = [
   
     {
         id: 2,
-        name: 'Subjects',
+        name: 'News Feed',
         href: '/dashboard/subjects',
         icon: Book
     },
