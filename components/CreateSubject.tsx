@@ -52,7 +52,7 @@ const EventPost = () => {
         setError(null)
 
         try {
-            const response = await fetch("http://localhost:5000/api/news", {
+            const response = await fetch("https://fourir-website-newsfeed-api.onrender.com/api/news", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -18,7 +18,7 @@ function Login() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('http://localhost:5000/auth/login', {
+      const response = await fetch('https://fourir-website-newsfeed-api.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

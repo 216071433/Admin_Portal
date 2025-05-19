@@ -54,7 +54,7 @@ const EditStory = ({_id, date, heading, story}: StoryType) => {
 
         try {
             // PUT request to update the story using its _id
-            const response = await fetch(`http://localhost:5000/api/news/${_id}`, {
+            const response = await fetch(`https://fourir-website-newsfeed-api.onrender.com/api/news/${_id}`, {
                 method: "PUT", // Change from POST to PUT
                 headers: {
                     "Content-Type": "application/json",

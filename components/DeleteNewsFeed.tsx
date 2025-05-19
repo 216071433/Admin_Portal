@@ -16,7 +16,7 @@ const DeleteNewsFeed = ({ id }: DeleteNewsFeedProps) => {
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/news/${id}`, {
+      const response = await fetch(`https://fourir-website-newsfeed-api.onrender.com/api/news/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

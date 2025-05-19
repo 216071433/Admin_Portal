@@ -16,7 +16,7 @@ const DashboardBlocks = () => {
                 setError(null);
                 
                 console.log('Fetching news count...');
-                const response = await fetch('http://localhost:5000/api/news/count', {
+                const response = await fetch('https://fourir-website-newsfeed-api.onrender.com/api/news/count', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ import { Story } from './columns'
 import Link from 'next/link'
 
 async function getStories(): Promise<Story[]> {
-  const response = await fetch("http://localhost:5000/api/news", {
+  const response = await fetch("https://fourir-website-newsfeed-api.onrender.com/api/news", {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',

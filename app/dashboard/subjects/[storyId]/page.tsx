@@ -13,7 +13,7 @@ type Params = Promise<{storyId: string}>
 const StoryList  = async ({params}: {params: Params}) => {
   const {storyId} = await params
 
-  const response = await fetch(`http://localhost:5000/api/news/${storyId}`);
+  const response = await fetch(`https://fourir-website-newsfeed-api.onrender.com/api/news/${storyId}`);
 
   const data = await response.json()
 
